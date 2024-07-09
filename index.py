@@ -2,6 +2,7 @@ from data import user
 from tool import Find_Login_Users,Find_User
 from random import randint
 from datetime import date
+from time import sleep
 
 #Variveis Globlais
 timenow = date.today()
@@ -64,13 +65,60 @@ def Cards(card_bool):
         print("Cartao Criado Com Susseso!!!")
         Cards(card_bool= True)
 
-    if command.lower() == "1" and card_bool == False:
+    if command.lower() == "1" and not card_bool:
         CreadCard(card_bool)
     elif command.lower() == "main" or command.lower() == "m":
         main()
     else:
         print("Comando Nao Podee Ser Indetificado!")
         Cards(card_bool= False)
+
+def Pix():
+    def PixMain():
+        namePix = input("Digite O Nome Do Usuario: ")
+        for i in user:
+            if namePix == i["nome"]:
+                idAcont = Find_User(TypeScreth="ID", name=namePix)
+                PixUser = input("Digite O ID Do Usuario Para Transferencia: ")
+
+                if Find_User(TypeScreth="ID", name=namePix) == PixUser:
+                    Value_Pix = int(input("Digite O Valor: "))
+                    
+                    # Adiciona o valor na conta do destinatário
+                    for j in user:
+                        if j["nome"] == namePix:
+                            j["BRL"] += Value_Pix
+                            break
+                    
+                    # Subtrai o valor da conta do remetente
+                    for j in user:
+                        if j["nome"] == name:
+                            j["BRL"] -= Value_Pix
+                            break
+                    
+                    print(f"Transferência realizada com sucesso. Novo saldo de {namePix}: {Find_User(TypeScreth='BRL', name=namePix)}")
+                    main()
+                else:
+                    print("ID do usuário não corresponde ao nome do usuário.")
+                    Pix()
+            else:
+                print("Nome Não Pode Ser Identificado (ERRO: 0001x)")
+                PixMain()
+
+    if Find_User(TypeScreth="ID", name=name) == "":
+        minValue = 0 
+        maxValue = 1000000
+        newIDAcont = randint(minValue, maxValue)
+        for i in user:
+            if i["nome"] == name:
+                i["ID"] = str(newIDAcont)
+                break
+        print(f"ID: {newIDAcont}")
+        sleep(1)
+        PixMain()
+    else:
+        PixMain()
+
 
 def Start():
     command = input("Já Possui Conta No Banco?: ")
@@ -118,6 +166,8 @@ def main():
         MainBTC(name= name)
     elif command.lower() == "3":
         Cards(card_bool= False)
+    elif command.lower() == "4":
+        Pix()
     else:
         main()
 
