@@ -8,6 +8,7 @@ from time import sleep
 timenow = date.today()
 year = timenow.year
 str(year)
+In_Dev = True
 
 #Inteface
 
@@ -73,37 +74,45 @@ def Cards(card_bool):
         print("Comando Nao Podee Ser Indetificado!")
         Cards(card_bool= False)
 
-def Pix():
-    def PixMain():
-        namePix = input("Digite O Nome Do Usuario: ")
-        for i in user:
-            if namePix == i["nome"]:
-                idAcont = Find_User(TypeScreth="ID", name=namePix)
-                PixUser = input("Digite O ID Do Usuario Para Transferencia: ")
+#In Dev
+def Pix(In_Dev):
+    if not In_Dev:
+        def PixMain():
+            namePix = input("Digite O Nome Do Usuario: ")
+            print(idAcont)
 
-                if Find_User(TypeScreth="ID", name=namePix) == PixUser:
-                    Value_Pix = int(input("Digite O Valor: "))
-                    
-                    # Adiciona o valor na conta do destinatário
-                    for j in user:
-                        if j["nome"] == namePix:
-                            j["BRL"] += Value_Pix
-                            break
-                    
-                    # Subtrai o valor da conta do remetente
-                    for j in user:
-                        if j["nome"] == name:
-                            j["BRL"] -= Value_Pix
-                            break
-                    
-                    print(f"Transferência realizada com sucesso. Novo saldo de {namePix}: {Find_User(TypeScreth='BRL', name=namePix)}")
-                    main()
+            for i in user:
+                if namePix == i["nome"]:
+                    idAcont = Find_User(TypeScreth="ID", name=namePix)
+
+                    if idAcont == "":
+                        print("Este Usuario Nao Pode Aceitar Pix")
+                        PixMain()
+                    PixUser = input("Digite O ID Do Usuario Para Transferencia: ")
+
+                    if Find_User(TypeScreth="ID", name=namePix) == PixUser:
+                        Value_Pix = int(input("Digite O Valor: "))
+                        
+                        # Adiciona o valor na conta do destinatário
+                        for j in user:
+                            if j["nome"] == namePix:
+                                j["BRL"] += Value_Pix
+                                break
+                        
+                        # Subtrai o valor da conta do remetente
+                        for j in user:
+                            if j["nome"] == name:
+                                j["BRL"] -= Value_Pix
+                                break
+                        
+                        print(f"Transferência realizada com sucesso. Novo saldo de {namePix}: {Find_User(TypeScreth='BRL', name=namePix)}")
+                        main()
+                    else:
+                        print("ID do usuário não corresponde ao nome do usuário.")
+                        Pix()
                 else:
-                    print("ID do usuário não corresponde ao nome do usuário.")
-                    Pix()
-            else:
-                print("Nome Não Pode Ser Identificado (ERRO: 0001x)")
-                PixMain()
+                    print("Nome Não Pode Ser Identificado (ERRO: 0001x)")
+                    PixMain()
 
     if Find_User(TypeScreth="ID", name=name) == "":
         minValue = 0 
